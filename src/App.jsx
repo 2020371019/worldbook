@@ -1,18 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
+import { DatePicker, ConfigProvider } from 'antd'; 
 import './App.css'
+import LayoutComponent from './assets/components/Layout';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>App Con react</div>
-       
-       <button>index</button>
-       <button>lista</button>
-    </>
+<LayoutComponent
+leftColSize={{xs: 24, sm: 12, md:8, lg:6}}
+rightColSize={{xs: 24, sm: 12, md:16, lg:18}}
+leftContent={{xs: 24, sm: 12, md:8, lg:6}}
+rightContent={{xs: 24, sm: 12, md:8, lg:6}}
+></LayoutComponent>
   )
 }
 
