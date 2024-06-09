@@ -1,21 +1,14 @@
-
-import { DatePicker, ConfigProvider } from 'antd'; 
 import './App.css'
-import LayoutComponent from './assets/components/Layout';
-import Imagen from './assets/components/FormLogin/imagen';
-import FormLogin from './assets/components/FormLogin';
-import FormRegister from './assets/components/FormRegister';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './assets/routes';
 
 function App() {
 
   return (
-<LayoutComponent
-leftColSize={{xs: 24, sm: 12, md:16, lg:18}}
-rightColSize={{xs: 24, sm: 12, md:8, lg:6}}
-leftContent={<Imagen />}
-rightContent={<FormRegister />}
-></LayoutComponent>
+<BrowserRouter>
+<AppRoutes />
+</BrowserRouter>
   )
 }
 
-export default App
+export default App;
