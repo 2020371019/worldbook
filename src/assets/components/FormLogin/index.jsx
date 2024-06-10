@@ -19,6 +19,8 @@ const [loading, setLoading] = useState(false);
 //Estado para el error del login
 const [loginError, setLoginError] = useState(false);
 
+//Recuperando el login
+const { login } = useAuthData;
 //Función para enviar los datos del formulario
 const onFinish = async (values) => {
     setLoading(true); //Establece el estado de carga a true al enviar el formulario
@@ -28,7 +30,7 @@ const onFinish = async (values) => {
 //        console.log('Inicio de sesión exitoso:', response.data);
 if (response && response.data) {
     localStorage.setItem('token', response.data.token);
-    console.log(response.data.token)
+    login(response.data.token)
     navigate('/');
 }
 else{

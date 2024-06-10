@@ -11,7 +11,7 @@ const AppRoutes = () => {
     let routes = useRoutes([
         { path: '/', element: user ?  <Home/> : <Login/>},
         {path: '/register', element: <Register />},
-        {path: '/', element: <Home />}
+        { path: '/login', element: <Login/>},
     ])
 
     return routes;
