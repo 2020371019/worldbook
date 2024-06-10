@@ -5,8 +5,12 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import authService from '../../../services/auth';
+import { useAuth } from '../../../hooks/useAuth';
 
 const FormLogin = () => {
+
+    const useAuthData = useAuth();
+    console.log(useAuthData);
 
 const navigate = useNavigate();
 //Estado de carga
