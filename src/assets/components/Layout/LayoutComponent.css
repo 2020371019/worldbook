@@ -1,0 +1,31 @@
+.layout-container {
+    width: 100%;
+    height: 100vh; /* Usar vh para altura completa de la vista */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-left {
+    height: 100vh;
+    background: #EBEFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-right {
+    height: 100vh;
+    background: #355dae;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    font-size: 20px;
+    color: rgb(141, 26, 26);  /* Asegurar que el texto sea visible */
+    font-weight: 700;
+    
+}
