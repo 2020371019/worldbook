@@ -4,6 +4,7 @@ export const ENV = {
         LOGIN: 'getin/signin',
         REGISTER: 'getin/signUp',
         USERS: 'getin/obtenerusuario',
+        PRODUCTS:'books'
     },
     STORAGE: {
             TOKEN: "token",
