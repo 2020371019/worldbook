@@ -12,7 +12,8 @@ const Home = () => {
         <>
         <Nav/>
         <h1>Home</h1>  
-        <p>Hola mundo</p>     
+        <p>Hola mundo</p>   
+        <p>Mi user es Xoleunam</p>  
         <h1>Bienvenid@ {user.readerFound.readername}</h1> 
         <Button onClick={() => logout()}>Cerrar Sesión</Button>
         </>
