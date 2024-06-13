@@ -65,6 +65,7 @@ export const AuthProvider = (props) => {
     }
     const data = {
         user,
+        getSession,
         login ,
         logout,
         upDateUser,

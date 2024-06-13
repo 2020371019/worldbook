@@ -5,7 +5,8 @@ import { UserOutlined } from "@ant-design/icons";
 const DrawerComponent = () => {
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
-        setOpen(false);
+        setOpen(true);
+
     };
     const onClose = () => {
         setOpen(false);
