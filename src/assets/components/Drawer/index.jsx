@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Drawer, Avatar } from "antd";
+=======
 import { UserOutlined } from "@ant-design/icons";
 
 const DrawerComponent = () => {
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
         setOpen(false);
+
     };
     const onClose = () => {
         setOpen(false);
