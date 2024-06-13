@@ -11,9 +11,7 @@ const Home = () => {
     return (
         <>
         <Nav/>
-        <h1>Home</h1>  
-        <p>Hola mundo</p>     
-        <p>Soy nuevo 20203701895</p>
+        <h1>Home</h1>
         <h1>Bienvenid@ {user.readerFound.readername}</h1> 
         <Button onClick={() => logout()}>Cerrar Sesión</Button>
         </>
