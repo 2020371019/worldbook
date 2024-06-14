@@ -3,15 +3,12 @@ import { storageController } from '../services/token';
 import { usersService } from '../services/users';
 import { tokenExpired } from '../utils/tokenExpired';
 
-
 export const AuthContext = createContext();
 
-export const AuthProvider = (props) => {
-    const { children } = props;
-
-    //Crear el estado del usuario
+export const AuthProvider = ({ children }) => {
+    // Crear el estado del usuario
     const [user, setUser] = useState(null);
-    //Crear el estado de carga
+    // Crear el estado de carga
     const [loading, setLoading] = useState(true);
 
     const login = async (token) => {
@@ -21,7 +18,6 @@ export const AuthProvider = (props) => {
             setUser(response);
             setLoading(false);
             console.log(response);
-
         } catch (error) {
             console.error(error);
             setLoading(false);
@@ -31,46 +27,51 @@ export const AuthProvider = (props) => {
     const logout = async () => {
         try {
             await storageController.removeToken();
-            setUser(null)
-            setLoading(false)
-        }catch (error) {
-            console.error(error)
-            setLoading(false)
+            setUser(null);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
         }
     }
-    
+
     useEffect(() => {
         getSession();
-    }, [])
+    }, []);
 
     const getSession = async () => {
         const token = await storageController.getToken();
-        if(!token) {
-                logout()
-       // console.log('Token --> :', token);
-       setLoading(false)
-       return 
-        } if (tokenExpired(token)){
-            logout()
-        }else{
-            login(token)
+        if (!token) {
+            logout();
+            setLoading(false);
+            return;
+        } 
+        if (tokenExpired(token)) {
+            logout();
+        } else {
+            login(token);
         }
     }
 
-    const upDateUser = (key, value) => {
+    const updateUser = (key, value) => {
         setUser({
             ...user,
-            [key]:value
-        })
+            [key]: value
+        });
     }
+
     const data = {
         user,
+        email: user?.email, // Proporcionar el correo electrónico
+        token: storageController.getToken(), // Proporcionar el token
         getSession,
-        login ,
+        login,
         logout,
-        upDateUser,
+        updateUser,
     }
+
     if (loading) return null;
+
     return (
         <AuthContext.Provider value={data}>
             {children}

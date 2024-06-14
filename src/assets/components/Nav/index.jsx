@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
-const { Header } = Layout;
-import book from '../../book.jpg';
+import { AuthContext } from "../../../context/AuthContext";
+import book from "../../book.jpg"; // Ruta corregida para la imagen book
 import './Nav.css';
 import DrawerComponent from "../Drawer";
 
-const Nav = () => {
+const { Header } = Layout;
 
-    const tabNames = ["", "Productos", "Servicios", "Contacto"];
+const Nav = () => {
+    const { user } = useContext(AuthContext);
+
+    const tabNames = ["Inicio", "Productos", "Servicios", "Contacto"];
     const items = tabNames.map((name, index) => ({
-        key: index +1,
+        key: index + 1,
         label: name,
         url: index === 0 ? "/" : `/${name.toLowerCase()}`,
     }));
@@ -18,34 +21,34 @@ const Nav = () => {
     return (
         <Header className="header-content">
             <Link to="/">
-                <img src={book} alt="logo" 
-                style={{
-                    height: 100,
-                    width: 150
-                }}/>
+                <img src={book} alt="logo" style={{ height: 100, width: 150 }} />
             </Link>
             <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={['1']}
-            style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                flex: 1,
-                minWidth: 0,
-                marginRight: '20px'
-            }}
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={['1']}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    flex: 1,
+                    minWidth: 0,
+                    marginRight: '20px'
+                }}
             >
-                
                 {items.map(item => (
                     <Menu.Item key={item.key}>
                         <Link to={item.url}>{item.label}</Link>
                     </Menu.Item>
                 ))}
+                {user && (
+                    <Menu.Item key="perfil">
+                        <Link to="/perfil">Perfil</Link>
+                    </Menu.Item>
+                )}
             </Menu>
-            <DrawerComponent/>
+            <DrawerComponent />
         </Header>
-    )
-}
+    );
+};
 
 export default Nav;
