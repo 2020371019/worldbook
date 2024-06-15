@@ -4,12 +4,12 @@ export const ENV = {
         LOGIN: 'getin/signin',
         REGISTER: 'getin/signUp',
         USERS: 'getin/obtenerusuario',
-        PRODUCTS: 'books',
-        UPDATEPRODUCTS: 'books/',
-        DELETEBOOKS: 'books/',
-        CHANGE_PASSWORD: 'getin/changePassword' // Nueva ruta para cambiar la contraseña
+        CHANGE_PASSWORD: "getin/updateUserById",
+        PRODUCTS:'books',
+        UPDATEPRODUCTS:'books/',
+        DELETEBOOKS:'books/'
     },
     STORAGE: {
-        TOKEN: "token",
+            TOKEN: "token",
     }
-};
+}

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import { AuthContext } from "../../../context/AuthContext";
-import book from "../../book.jpg"; // Ruta corregida para la imagen book
+import book from "../../book.jpg"; // Asegúrate de que esta ruta sea correcta
 import './Nav.css';
 import DrawerComponent from "../Drawer";
 
@@ -14,9 +14,15 @@ const Nav = () => {
     const tabNames = ["Inicio", "Productos", "Servicios", "Contacto"];
     const items = tabNames.map((name, index) => ({
         key: index + 1,
-        label: name,
-        url: index === 0 ? "/" : `/${name.toLowerCase()}`,
+        label: <Link to={index === 0 ? "/" : `/${name.toLowerCase()}`}>{name}</Link>
     }));
+
+    if (user) {
+        items.push({
+            key: 'perfil',
+            label: <Link to="/perfil">Perfil</Link>
+        });
+    }
 
     return (
         <Header className="header-content">
@@ -27,6 +33,7 @@ const Nav = () => {
                 theme="dark"
                 mode="horizontal"
                 defaultSelectedKeys={['1']}
+                items={items} // Usar 'items' en lugar de 'children'
                 style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
@@ -34,18 +41,7 @@ const Nav = () => {
                     minWidth: 0,
                     marginRight: '20px'
                 }}
-            >
-                {items.map(item => (
-                    <Menu.Item key={item.key}>
-                        <Link to={item.url}>{item.label}</Link>
-                    </Menu.Item>
-                ))}
-                {user && (
-                    <Menu.Item key="perfil">
-                        <Link to="/perfil">Perfil</Link>
-                    </Menu.Item>
-                )}
-            </Menu>
+            />
             <DrawerComponent />
         </Header>
     );
