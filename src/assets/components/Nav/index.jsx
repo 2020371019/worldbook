@@ -8,7 +8,7 @@ import DrawerComponent from "../Drawer";
 
 const Nav = () => {
 
-    const tabNames = ["", "Productos", "Servicios", "Contacto"];
+    const tabNames = ["Home", "Productos"];
     const items = tabNames.map((name, index) => ({
         key: index +1,
         label: name,
