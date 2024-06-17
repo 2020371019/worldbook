@@ -2,14 +2,19 @@ import React, { useEffect, useState } from 'react';
 import Nav from '../../components/Nav';
 import { Divider, Table, Button, Modal, Form, Input } from 'antd';
 import { getProducts, UpdateProducts, deleteProducts, addProduct } from '../../../services/products';
+import { useAuth } from '../../../hooks/useAuth';
+import { EditFilled, DeleteFilled, PlusCircleOutlined } from '@ant-design/icons';
 
 const Productos = () => {
     const [products, setProducts] = useState([]);
-    const [selectionType, setSelectionType] = useState('checkbox');
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [selectionType] = useState('checkbox');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
     const [form] = Form.useForm();
+
+    const { user } = useAuth();
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -28,19 +33,21 @@ const Productos = () => {
         fetchProducts();
     }, []);
 
-    const handleEdit = (record) => {
-        setEditingProduct(record);
-        form.setFieldsValue(record);
+    const handleEdit = () => {
+        const selectedProduct = products.find(product => product.key === selectedRowKeys[0]);
+        setEditingProduct(selectedProduct);
+        form.setFieldsValue(selectedProduct);
         setIsModalVisible(true);
         setIsAdding(false);
     };
 
-    const handleDelete = async (key) => {
+    const handleDelete = async () => {
         try {
-            await deleteProducts(key);
-            const newProducts = products.filter((product) => product.key !== key);
+            await deleteProducts(selectedRowKeys[0]);
+            const newProducts = products.filter(product => product.key !== selectedRowKeys[0]);
             setProducts(newProducts);
-            console.log('Producto eliminado', key);
+            //setSelectedRowKeys([]);
+            console.log('Producto eliminado', selectedRowKeys[0]);
         } catch (error) {
             console.error('Error al eliminar el producto', error);
         }
@@ -82,7 +89,7 @@ const Productos = () => {
 
     const columns = [
         {
-            title: 'Nombre',
+            title: 'Nombre del Libro',
             dataIndex: 'name',
         },
         {
@@ -90,27 +97,18 @@ const Productos = () => {
             dataIndex: 'price',
         },
         {
-            title: 'Author',
+            title: 'Autor',
             dataIndex: 'author',
         },
         {
             title: 'Genero',
             dataIndex: 'genre',
-        },
-        {
-            title: 'Acciones',
-            render: (text, record) => (
-                <div>
-                    <Button type="link" onClick={() => handleEdit(record)}>Editar</Button>
-                    <Button type="link" onClick={() => handleDelete(record.key)}>Eliminar</Button>
-                </div>
-            ),
-        },
+        }
     ];
 
     const rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        onChange: (newSelectedRowKeys) => {
+            setSelectedRowKeys(newSelectedRowKeys);
         },
         getCheckBoxProps: (record) => ({
             disabled: record.name === 'Disabled user',
@@ -120,10 +118,27 @@ const Productos = () => {
 
     return (
         <div>
-            <Nav />
+            {user && <Nav />}
             <Divider />
             <div className="products-container">
-                <Button type="primary" onClick={handleAdd}>Agregar Producto</Button>
+                {user && (
+                    <>
+                        <Button type="primary" onClick={handleAdd}><PlusCircleOutlined /> Agregar Producto</Button>
+                        <Button 
+                            type="primary" 
+                            onClick={handleEdit} 
+                    
+                        >
+                            <EditFilled />
+                        </Button>
+                        <Button 
+                            type="primary" 
+                            onClick={handleDelete} 
+                        >
+                            <DeleteFilled />
+                        </Button>
+                    </>
+                )}
                 <Table
                     rowSelection={{
                         type: selectionType,
