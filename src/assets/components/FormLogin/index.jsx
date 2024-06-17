@@ -95,7 +95,7 @@ const onFinishFailed = (errorInfo) => {
                         Ingresar
                     </Button>
                 </Form.Item>
-                Aún no tienes cuenta? <a href="">Registrate</a>
+                Aún no tienes cuenta? <a href="/register">Registrate</a>
             </Form>
         </Card>
         </>
