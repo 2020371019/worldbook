@@ -88,7 +88,7 @@ const Productos = () => {
     const handleOk = () => {
         form.validateFields().then(async (values) => {
             if (!isFormEdited) {
-                openNotification('warning', 'Editar/Agregar libro', 'No has realizado cambios.');
+                openNotification('warning', 'Editar libro', 'No has realizado cambios.');
                 return;
             }
 
