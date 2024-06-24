@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Nav from '../../components/Nav';
-import { Divider, Table, Button, Modal, Form, Input } from 'antd';
+import { Divider, Table, Button, Modal, Form, Input, notification } from 'antd';
 import { getProducts, UpdateProducts, deleteProducts, addProduct } from '../../../services/products';
 import { useAuth } from '../../../hooks/useAuth';
 import { EditFilled, DeleteFilled, PlusCircleOutlined } from '@ant-design/icons';
@@ -13,6 +13,7 @@ const Productos = () => {
     const [isAdding, setIsAdding] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
     const [form] = Form.useForm();
+    const [isFormEdited, setIsFormEdited] = useState(false); // Nuevo estado para controlar si se han realizado cambios en el formulario
 
     const { user } = useAuth();
 
@@ -26,35 +27,59 @@ const Productos = () => {
                 }));
                 setProducts(productsWithKey);
             } catch (error) {
-                console.error('Error al obtener los productos', error);
+                console.error('Error al obtener los libros', error);
             }
         };
 
         fetchProducts();
     }, []);
 
+    const openNotification = (type, message, description) => {
+        notification[type]({
+            message,
+            description,
+        });
+    };
+
     const handleEdit = () => {
+        if (selectedRowKeys.length !== 1) {
+            openNotification('warning', 'Editar libro', 'Para editar, selecciona un solo libro.');
+            return;
+        }
+
         const selectedProduct = products.find(product => product.key === selectedRowKeys[0]);
         setEditingProduct(selectedProduct);
         form.setFieldsValue(selectedProduct);
         setIsModalVisible(true);
         setIsAdding(false);
+        setIsFormEdited(false); // Reinicia el estado de isFormEdited al abrir la modal de edición
     };
 
     const handleDelete = async () => {
+        if (selectedRowKeys.length !== 1) {
+            openNotification('warning', 'Eliminar libro', 'Para eliminar, selecciona un solo libro.');
+            return;
+        }
+
         try {
             await deleteProducts(selectedRowKeys[0]);
             const newProducts = products.filter(product => product.key !== selectedRowKeys[0]);
             setProducts(newProducts);
-            //setSelectedRowKeys([]);
-            console.log('Producto eliminado', selectedRowKeys[0]);
+            openNotification('success', 'Eliminar libro', 'El libro se eliminó correctamente.');
+            console.log('Libro eliminado', selectedRowKeys[0]);
         } catch (error) {
-            console.error('Error al eliminar el producto', error);
+            console.error('Error al eliminar el libro', error);
+            openNotification('error', 'Error', 'Hubo un problema al eliminar el libro.');
         }
     };
 
     const handleAdd = () => {
-        form.resetFields();
+        if (selectedRowKeys.length > 0) {
+            openNotification('warning', 'Agregar libro', 'Para agregar, no debes seleccionar ningún libro.');
+            return;
+        }
+
+        form.resetFields(); // Siempre limpiar el formulario al agregar
         setEditingProduct(null);
         setIsModalVisible(true);
         setIsAdding(true);
@@ -62,20 +87,28 @@ const Productos = () => {
 
     const handleOk = () => {
         form.validateFields().then(async (values) => {
+            if (!isFormEdited) {
+                openNotification('warning', 'Editar libro', 'No has realizado cambios.');
+                return;
+            }
+
             try {
                 if (isAdding) {
                     const newProduct = await addProduct(values);
                     setProducts([...products, { ...newProduct, key: newProduct._id }]);
+                    openNotification('success', 'Agregar libro', 'El libro se agregó correctamente.');
                 } else {
                     await UpdateProducts(editingProduct.key, values);
-                    setProducts(products.map(product => 
+                    setProducts(products.map(product =>
                         (product.key === editingProduct.key ? { ...product, ...values } : product)
                     ));
+                    openNotification('success', 'Editar libro', 'El libro se editó correctamente.');
                 }
                 setIsModalVisible(false);
                 setEditingProduct(null);
             } catch (error) {
-                console.error('Error al guardar el producto', error);
+                console.error('Error al guardar el libro', error);
+                openNotification('error', 'Error', 'Hubo un problema al guardar el libro.');
             }
         }).catch(info => {
             console.log('Validación fallida:', info);
@@ -83,8 +116,16 @@ const Productos = () => {
     };
 
     const handleCancel = () => {
+        // Verificar si se han realizado cambios en el formulario
+        if (isFormEdited) {
+            openNotification('info', 'Editar/Agregar libro', 'No has guardado los cambios.');
+            return;
+        }
+
+        form.resetFields(); // Limpiar el formulario al cancelar
         setIsModalVisible(false);
         setEditingProduct(null);
+        setIsFormEdited(false);
     };
 
     const columns = [
@@ -101,7 +142,7 @@ const Productos = () => {
             dataIndex: 'author',
         },
         {
-            title: 'Genero',
+            title: 'Género',
             dataIndex: 'genre',
         }
     ];
@@ -123,17 +164,16 @@ const Productos = () => {
             <div className="products-container">
                 {user && (
                     <>
-                        <Button type="primary" onClick={handleAdd}><PlusCircleOutlined /> Agregar Producto</Button>
-                        <Button 
-                            type="primary" 
-                            onClick={handleEdit} 
-                    
+                        <Button type="primary" onClick={handleAdd}><PlusCircleOutlined /> Agregar libro</Button>
+                        <Button
+                            type="primary"
+                            onClick={handleEdit}
                         >
                             <EditFilled />
                         </Button>
-                        <Button 
-                            type="primary" 
-                            onClick={handleDelete} 
+                        <Button
+                            type="primary"
+                            onClick={handleDelete}
                         >
                             <DeleteFilled />
                         </Button>
@@ -150,7 +190,7 @@ const Productos = () => {
                 />
             </div>
             <Modal
-                title={isAdding ? "Agregar Producto" : "Editar Producto"}
+                title={isAdding ? "Agregar libro" : "Editar libro"}
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -159,32 +199,33 @@ const Productos = () => {
                     form={form}
                     layout="vertical"
                     initialValues={editingProduct}
+                    onValuesChange={() => setIsFormEdited(true)}
                 >
                     <Form.Item
                         name="name"
                         label="Nombre"
-                        rules={[{ required: true, message: 'Por favor ingrese el nombre del producto' }]}
+                        rules={[{ required: true, message: 'Por favor ingrese el nombre del libro' }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         name="price"
                         label="Precio"
-                        rules={[{ required: true, message: 'Por favor ingrese el precio del producto' }]}
+                        rules={[{ required: true, message: 'Por favor ingrese el precio del libro' }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         name="author"
-                        label="Author"
-                        rules={[{ required: true, message: 'Por favor ingrese el autor del producto' }]}
+                        label="Autor"
+                        rules={[{ required: true, message: 'Por favor ingrese el autor del libro' }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         name="genre"
                         label="Género"
-                        rules={[{ required: true, message: 'Por favor ingrese el género del producto' }]}
+                        rules={[{ required: true, message: 'Por favor ingrese el género del libro' }]}
                     >
                         <Input />
                     </Form.Item>

@@ -11,7 +11,7 @@ const AppRoutes = () => {
     const { user } = useAuth();
     let routes = useRoutes([
         { path: '/', element: user ?  <Home/> : <Login/>},
-        {path: '/register', element: <Register />},
+        {path: '/register', element: <Register/>},
         { path: '/login', element: <Login/>},
         { path: '/productos', element: <Productos/>},
     ])
