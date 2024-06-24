@@ -17,28 +17,24 @@ const loginF = async (email, password) => {
   });
 };
 
-const changePassword = async (email, newPassword, token) => {
-  return axios.post(`${ENV.API_URL}/${ENV.ENDPOINTS.CHANGE_PASSWORD}`, 
-    { email, newPassword },
-    {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }
-  );
+
+export const updateUser = async (userId, newPassword) => {
+  try {
+    const response = await axios.put(
+      `${ENV.API_URL}/${ENV.ENDPOINTS.CHANGE_PASSWORD}/${userId}`,
+      { "password": newPassword }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar la contraseña ', error);
+    throw error;
+  }
 };
 
-const updateUser = async (userId, data, token) => {
-  return axios.put(`${ENV.API_URL}/${ENV.ENDPOINTS.USERS}/${userId}`, data, {
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  });
-};
 
 export default {
   register,
   loginF,
-  changePassword,
-  updateUser
+  updateUser,
+
 };

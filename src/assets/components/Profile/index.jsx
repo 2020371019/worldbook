@@ -1,36 +1,30 @@
-import React, { useContext, useState } from "react";
-import { Form, Input, Button, message, App } from "antd";
-import { AuthContext } from "../../../context/AuthContext";
-import auth from "../../../services/auth";
+import React, { useState } from "react";
+import { Form, Input, Button, message } from "antd";
+import { updateUser } from "../../../services/auth";
+import { useAuth } from "../../../hooks/useAuth";
 
 const Profile = () => {
-  const { email, token, user } = useContext(AuthContext);
   const [newPassword, setNewPassword] = useState("");
-
+  const { user } = useAuth();
+//es el usuario que ya inicio sesion  se optiene desde el useAuth
   const handleSave = async () => {
     try {
-      const response = await auth.changePassword(email, newPassword, token);
-      if (response.data.success) {
-        message.success("Contraseña cambiada correctamente");
-      } else {
-        message.error("Hubo un error al cambiar la contraseña");
-      }
+      await updateUser(user.readerFound._id, newPassword);
+      message.success("Contraseña cambiada correctamente");
+      setNewPassword(""); // Limpiar el campo de contraseña después de guardar
     } catch (error) {
       console.error("Error al cambiar la contraseña:", error);
-      message.error("Error al cambiar la contraseña");
+      message.error("Hubo un error al cambiar la contraseña");
     }
   };
-
-  if (!user) {
-    return <div>Loading...</div>; // Muestra un indicador de carga mientras se obtiene el estado del usuario
-  }
-
+//cuando le doy clic se manda a llamar la funcion handleSave
   return (
     <div style={{ padding: "20px" }}>
       <h1>Perfil</h1>
+      <h1>{user.readerFound.email}</h1>
       <Form layout="vertical">
         <Form.Item label="Correo">
-          <Input value={email} disabled />
+          <Input value={user.readerFound.email} disabled />
         </Form.Item>
         <Form.Item label="Nueva Contraseña">
           <Input.Password
@@ -39,7 +33,7 @@ const Profile = () => {
           />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" onClick={handleSave}>
+          <Button type="primary" onClick={handleSave}> 
             Guardar
           </Button>
         </Form.Item>
