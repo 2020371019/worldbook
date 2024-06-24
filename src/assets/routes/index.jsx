@@ -4,8 +4,8 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Productos from "../pages/Productos";
-import Profile from "../components/Profile"; // Ajusta la ruta según tu estructura de archivos
-import { useAuth } from "../../hooks/useAuth"; // Ajusta la ruta del hook según tu estructura de archivos
+import Profile from "../components/Profile"; 
+import { useAuth } from "../../hooks/useAuth";
 
 const AppRoutes = () => {
     const { user } = useAuth();
@@ -14,6 +14,7 @@ const AppRoutes = () => {
         {path: '/register', element: <Register />},
         { path: '/login', element: <Login/>},
         { path: '/productos', element: <Productos/>},
+        { path: '/perfil', element: <Profile/>},
     ])
 
     return routes;
