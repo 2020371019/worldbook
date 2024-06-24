@@ -6,7 +6,8 @@ export const ENV = {
         USERS: 'getin/obtenerusuario',
         PRODUCTS:'books',
         UPDATEPRODUCTS:'books/',
-        DELETEBOOKS:'books/'
+        DELETEBOOKS:'books/',
+        GETBYGENRE:'books/getbygenre'
     },
     STORAGE: {
             TOKEN: "token",
