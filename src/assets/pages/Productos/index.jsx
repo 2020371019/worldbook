@@ -195,6 +195,8 @@ const Productos = () => {
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
+             {user && (
+                <>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="demo-logo-vertical" />
           <Menu
@@ -209,7 +211,11 @@ const Productos = () => {
             ]}
           />
         </Sider>
+        </>
+             )}
         <Layout>
+        {user && (
+                <>
         <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
@@ -218,7 +224,8 @@ const Productos = () => {
             style={{ fontSize: '16px', width: 64, height: 64 }}
           />
         </Header>
-        
+        </>
+        )}
         <Content
           style={{
             margin: '24px 16px',
