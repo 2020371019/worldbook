@@ -45,3 +45,15 @@ export const addProduct = async (newProduct) => {
         throw error;
     }
 }
+
+export const getProductsByGenre = async (genre) => {
+    
+    try {
+        const response = await axios.get(`${ENV.API_URL}/${ENV.ENDPOINTS.GETBYGENRE}/${genre}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener los generos', error);
+        throw error;
+    }
+
+}
