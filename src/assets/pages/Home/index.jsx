@@ -34,16 +34,51 @@ const Home = () => {
     }
   };
 
-    return (
-        <>
-        <Nav/>
-        <h1>Home</h1>
-        <h1>Bienvenid@ {user.readerFound.readername}</h1> 
-        <h1>Bienvenid@ {user.readerFound.password}</h1>
-        <h1>Bienvenid@ {user.readerFound.email}</h1>  
-        <Button onClick={() => logout()}>Cerrar Sesión</Button>
-        </>
-    );
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <div className="demo-logo-vertical" />
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          onClick={({ key }) => handleMenuClick(key)}
+          items={[
+            { key: '1', icon: <HomeOutlined />, label: 'Home' },
+            { key: '2', icon: <UserOutlined />, label: 'Perfil' },
+            { key: '3', icon: <BookOutlined />, label: 'Libros' },
+          ]}
+        />
+      </Sider>
+      <Layout>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <Button
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setCollapsed(!collapsed)}
+            style={{ fontSize: '16px', width: 64, height: 64 }}
+          />
+        </Header>
+        <Content
+          style={{
+            margin: '24px 16px',
+            padding: 24,
+            background: colorBgContainer,
+            borderRadius: borderRadiusLG,
+            overflowX: 'auto', // Scroll horizontal
+            overflowY: 'auto', // Scroll vertical
+            maxHeight: 'calc(100vh - 64px)', // Altura máxima
+          }}
+        >
+          <h1>Home</h1>
+          <h1>Bienvenid {user.readerFound.readername}</h1>
+          {/* <h1>Bienvenid@ {user.readerFound.password}</h1> */}
+          {/* <h1>Bienvenid@ {user.readerFound.email}</h1> */}
+          <Button onClick={() => logout()}>Cerrar Sesión</Button>
+        </Content>
+      </Layout>
+    </Layout>
+  );
 }
 
 export default Home;
