@@ -57,7 +57,7 @@ const Profile = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={['2']}
           onClick={({ key }) => handleMenuClick(key)}
           items={[
             { key: '1', icon: <HomeOutlined />, label: 'Home' },
