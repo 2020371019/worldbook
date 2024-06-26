@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Nav from '../../components/Nav';
-import { Divider, Table, Button, Modal, Form, Input, notification, AutoComplete } from 'antd';
+import { Divider, Table, Button, Modal, Form, Input, notification } from 'antd';
 import { getProducts, UpdateProducts, deleteProducts, addProduct, getProductsByGenre } from '../../../services/products';
 import { useAuth } from '../../../hooks/useAuth';
 import { EditFilled, DeleteFilled, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
@@ -139,34 +139,17 @@ const Productos = () => {
         setIsFormEdited(false);
     };
 
-    const handleGenreChange = async (value) => {
-        setGenre(value);
-        if (value) {
-
-            try {
-                const data = await getProductsByGenre(value);
-                const productsWithKey = data.map(product => ({
-                    ...product,
-                    key: product._id,
-                }));
-                setProducts(productsWithKey);
-
-                
-            } catch (error) {
-                console.error('Error al obtener los libros por género', error);
-                openNotification('error', 'Error', 'Hubo un problema al obtener los libros por género.');
-            }
-        } else {
-            try {
-                const data = await getProducts();
-                const productsWithKey = data.map(product => ({
-                    ...product,
-                    key: product._id,
-                }));
-                setProducts(productsWithKey);
-            } catch (error) {
-                console.error('Error al obtener los libros', error);
-            }
+    const handleSearchByGenre = async () => {
+        try {
+            const data = await getProductsByGenre(genre);
+            const productsWithKey = data.map(product => ({
+                ...product,
+                key: product._id,
+            }));
+            setProducts(productsWithKey);
+        } catch (error) {
+            console.error('Error al obtener los libros por género', error);
+            openNotification('error', 'Error', 'Hubo un problema al obtener los libros por género.');
         }
     };
 
@@ -270,12 +253,13 @@ const Productos = () => {
                                     <Button type="primary" onClick={handleAdd}><PlusCircleOutlined /> Agregar libro</Button>
                                     <Button type="primary" onClick={handleEdit}><EditFilled /></Button>
                                     <Button type="primary" onClick={handleDelete}><DeleteFilled /></Button>
-                                    <AutoComplete
-                                        style={{ width: 200, marginRight: 8 }}
-                                        value={genre}
-                                        onChange={handleGenreChange}
+                                    <Input
                                         placeholder="Género"
+                                        value={genre}
+                                        onChange={e => setGenre(e.target.value)}
+                                        style={{ width: 200, marginRight: 8 }}
                                     />
+                                    <Button type="primary" onClick={handleSearchByGenre}><SearchOutlined /> Buscar</Button>
                                 </>
                             )}
                             <Table
