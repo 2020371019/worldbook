@@ -5,6 +5,7 @@ import { getProducts, UpdateProducts, deleteProducts, addProduct } from '../../.
 import { useAuth } from '../../../hooks/useAuth';
 import { EditFilled, DeleteFilled, PlusCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
+import { createBook } from '../../../services/books';
 
 
 import { 
@@ -109,7 +110,7 @@ const Productos = () => {
 
             try {
                 if (isAdding) {
-                    const newProduct = await addProduct(values);
+                    const newProduct = await createBook(values);
                     setProducts([...products, { ...newProduct, key: newProduct._id }]);
                     openNotification('success', 'Agregar libro', 'El libro se agregó correctamente.');
                 } else {
