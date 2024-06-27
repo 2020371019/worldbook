@@ -72,6 +72,7 @@ const Home = () => {
         >
           <h1>Home</h1>
           <h1>Bienvenid {user.readerFound.readername}</h1>
+          <h1>Bienvenid {user.readerFound.email}</h1>
           {/* <h1>Bienvenid@ {user.readerFound.password}</h1> */}
           {/* <h1>Bienvenid@ {user.readerFound.email}</h1> */}
           <Button onClick={() => logout()}>Cerrar Sesión</Button>
