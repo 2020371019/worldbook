@@ -289,7 +289,7 @@ const Productos = () => {
                             />
                         </div>
                         <Modal
-                            title={isAdding ? "Agregar libro" : "Editar libro"}
+                            title={isAdding ? "Agregar libro " : "Editar libro "}
                             visible={isModalVisible}
                             onOk={handleOk}
                             onCancel={handleCancel}
