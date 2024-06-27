@@ -1,5 +1,7 @@
 import React, { useState} from "react";
+
 import { Form, Input, Button, message, Layout, Menu, theme, Card } from "antd";
+
 import { updateUser } from "../../../services/auth";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -69,6 +71,7 @@ const Profile = () => {
             { key: '2', icon: <KeyOutlined />, label: 'Editar contraseña' },
             { key: '3', icon: <UserOutlined/>, label: 'Editar perfil' },
             { key: '4', icon: <BookOutlined />, label: 'Libros' },
+
           ]}
         />
       </Sider>
@@ -111,6 +114,26 @@ const Profile = () => {
             </Form>
           </Card>
     
+    <div style={{ padding: "20px" }}>
+      <h1>Perfil</h1>
+      <h1>{user.readerFound.email}</h1>
+      <Form layout="vertical">
+        <Form.Item label="Correo">
+          <Input value={user.readerFound.email} disabled />
+        </Form.Item>
+        <Form.Item label="Nueva Contraseña">
+          <Input.Password
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" onClick={handleSave}> 
+            Guardar
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
     </Content>
     </Layout>
     </Layout>
