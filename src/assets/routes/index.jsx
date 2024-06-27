@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Productos from "../pages/Productos";
 import Profile from "../components/Profile"; 
+import EditProfile from "../components/EditProfile"; 
 import { useAuth } from "../../hooks/useAuth";
 
 const AppRoutes = () => {
@@ -15,6 +16,7 @@ const AppRoutes = () => {
         { path: '/login', element: <Login/>},
         { path: '/productos', element: <Productos/>},
         { path: '/perfil', element: <Profile/>},
+        { path: '/editprofile', element: <EditProfile/>},
     ])
 
     return routes;

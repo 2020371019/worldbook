@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Nav from '../../components/Nav';
 import { Divider, Table, Button, Modal, Form, Input, notification } from 'antd';
-import { getProducts, UpdateProducts, deleteProducts, addProduct } from '../../../services/products';
+import { getProducts, UpdateProducts, deleteProducts, addProduct, getProductsByGenre } from '../../../services/products';
 import { useAuth } from '../../../hooks/useAuth';
-import { EditFilled, DeleteFilled, PlusCircleOutlined } from '@ant-design/icons';
+import { EditFilled, DeleteFilled, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
-
-
 import { 
   MenuFoldOutlined, 
   MenuUnfoldOutlined, 
   BookOutlined, 
   UserOutlined, 
-  HomeOutlined
-} from '@ant-design/icons';
-import {  Layout, Menu, theme } from 'antd';
+  HomeOutlined,
+  KeyOutlined
 
+} from '@ant-design/icons';
+import { Layout, Menu, theme } from 'antd';
 
 const { Header, Sider, Content } = Layout;
-
 
 const Productos = () => {
     const [products, setProducts] = useState([]);
@@ -28,7 +26,8 @@ const Productos = () => {
     const [isAdding, setIsAdding] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
     const [form] = Form.useForm();
-    const [isFormEdited, setIsFormEdited] = useState(false); // Nuevo estado para controlar si se han realizado cambios en el formulario
+    const [isFormEdited, setIsFormEdited] = useState(false);
+    const [genre, setGenre] = useState("");
 
     const { user } = useAuth();
 
@@ -67,7 +66,7 @@ const Productos = () => {
         form.setFieldsValue(selectedProduct);
         setIsModalVisible(true);
         setIsAdding(false);
-        setIsFormEdited(false); // Reinicia el estado de isFormEdited al abrir la modal de edición
+        setIsFormEdited(false);
     };
 
     const handleDelete = async () => {
@@ -94,7 +93,7 @@ const Productos = () => {
             return;
         }
 
-        form.resetFields(); // Siempre limpiar el formulario al agregar
+        form.resetFields(); 
         setEditingProduct(null);
         setIsModalVisible(true);
         setIsAdding(true);
@@ -131,16 +130,29 @@ const Productos = () => {
     };
 
     const handleCancel = () => {
-        // Verificar si se han realizado cambios en el formulario
         if (isFormEdited) {
             openNotification('info', 'Editar/Agregar libro', 'No has guardado los cambios.');
             return;
         }
 
-        form.resetFields(); // Limpiar el formulario al cancelar
+        form.resetFields();
         setIsModalVisible(false);
         setEditingProduct(null);
         setIsFormEdited(false);
+    };
+
+    const handleSearchByGenre = async () => {
+        try {
+            const data = await getProductsByGenre(genre);
+            const productsWithKey = data.map(product => ({
+                ...product,
+                key: product._id,
+            }));
+            setProducts(productsWithKey);
+        } catch (error) {
+            console.error('Error al obtener los libros por género', error);
+            openNotification('error', 'Error', 'Hubo un problema al obtener los libros por género.');
+        }
     };
 
     const columns = [
@@ -172,147 +184,146 @@ const Productos = () => {
         }),
     };
 
-
     const [collapsed, setCollapsed] = useState(false);
-  const { colorBgContainer, borderRadiusLG } = theme.useToken().token;
-  const navigate = useNavigate();
+    const { colorBgContainer, borderRadiusLG } = theme.useToken().token;
+    const navigate = useNavigate();
 
-  const handleMenuClick = (key) => {
-    switch (key) {
-      case '1':
-        navigate('/');
-        break;
-      case '2':
-        navigate('/perfil');
-        break;
-      case '3':
-        navigate('/productos');
-        break;
-      default:
-        break;
-    }
-  };
+    const handleMenuClick = (key) => {
+        switch (key) {
+            case '1':
+              navigate('/');
+              break;
+            case '2':
+              navigate('/perfil');
+              break;
+            case '3':
+                navigate('/editprofile');
+              break;
+            case '4':
+              navigate('/productos');
+              break;
+            default:
+              break;
+          }
+    };
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
-             {user && (
+            {user && (
                 <>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
-          <div className="demo-logo-vertical" />
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={['3']}
-            onClick={({ key }) => handleMenuClick(key)}
-            items={[
-              { key: '1', icon: <HomeOutlined />, label: 'Home' },
-              { key: '2', icon: <UserOutlined />, label: 'Perfil' },
-              { key: '3', icon: <BookOutlined />, label: 'Libros' },
-            ]}
-          />
-        </Sider>
-        </>
-             )}
-        <Layout>
-        {user && (
-                <>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{ fontSize: '16px', width: 64, height: 64 }}
-          />
-        </Header>
-        </>
-        )}
-        <Content
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-            overflowX: 'auto', // Scroll horizontal
-            overflowY: 'auto', // Scroll vertical
-            maxHeight: 'calc(100vh - 64px)', // Altura máxima
-          }}
-        >
-        <div>
-         
-            <div className="products-container">
+                    <Sider trigger={null} collapsible collapsed={collapsed}>
+                        <div className="demo-logo-vertical" />
+                        <Menu
+                            theme="dark"
+                            mode="inline"
+                            defaultSelectedKeys={['4']}
+                            onClick={({ key }) => handleMenuClick(key)}
+                            items={[
+                                { key: '1', icon: <HomeOutlined />, label: 'Home'},
+                                { key: '2', icon: <KeyOutlined />, label: 'Editar contraseña'},
+                                { key: '3', icon: <UserOutlined/>, label: 'Editar perfil'},
+                                { key: '4', icon: <BookOutlined />, label: 'Libros'},
+                            ]}
+                        />
+                    </Sider>
+                </>
+            )}
+            <Layout>
                 {user && (
                     <>
-                        <Button type="primary" onClick={handleAdd}><PlusCircleOutlined /> Agregar libro</Button>
-                        <Button
-                            type="primary"
-                            onClick={handleEdit}
-                        >
-                            <EditFilled />
-                        </Button>
-                        <Button
-                            type="primary"
-                            onClick={handleDelete}
-                        >
-                            <DeleteFilled />
-                        </Button>
+                        <Header style={{ padding: 0, background: colorBgContainer }}>
+                            <Button
+                                type="text"
+                                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                                onClick={() => setCollapsed(!collapsed)}
+                                style={{ fontSize: '16px', width: 64, height: 64 }}
+                            />
+                        </Header>
                     </>
                 )}
-                <Table
-                    rowSelection={{
-                        type: selectionType,
-                        ...rowSelection,
+                <Content
+                    style={{
+                        margin: '24px 16px',
+                        padding: 24,
+                        background: colorBgContainer,
+                        borderRadius: borderRadiusLG,
+                        overflowX: 'auto',
+                        overflowY: 'auto',
+                        maxHeight: 'calc(100vh - 64px)',
                     }}
-                    columns={columns}
-                    dataSource={products}
-                    scroll={{ y: 400 }}
-                />
-            </div>
-            <Modal
-                title={isAdding ? "Agregar libro" : "Editar libro"}
-                visible={isModalVisible}
-                onOk={handleOk}
-                onCancel={handleCancel}
-            >
-                <Form
-                    form={form}
-                    layout="vertical"
-                    initialValues={editingProduct}
-                    onValuesChange={() => setIsFormEdited(true)}
                 >
-                    <Form.Item
-                        name="name"
-                        label="Nombre"
-                        rules={[{ required: true, message: 'Por favor ingrese el nombre del libro' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="price"
-                        label="Precio"
-                        rules={[{ required: true, message: 'Por favor ingrese el precio del libro' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="author"
-                        label="Autor"
-                        rules={[{ required: true, message: 'Por favor ingrese el autor del libro' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="genre"
-                        label="Género"
-                        rules={[{ required: true, message: 'Por favor ingrese el género del libro' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                </Form>
-            </Modal>
-        </div>
-        </Content>
-      </Layout>
-    </Layout>
+                    <div>
+                        <div className="products-container">
+                            {user && (
+                                <>
+                                    <Button type="primary" onClick={handleAdd}><PlusCircleOutlined /> Agregar libro</Button>
+                                    <Button type="primary" onClick={handleEdit}><EditFilled /></Button>
+                                    <Button type="primary" onClick={handleDelete}><DeleteFilled /></Button>
+                                    <Input
+                                        placeholder="Género"
+                                        value={genre}
+                                        onChange={e => setGenre(e.target.value)}
+                                        style={{ width: 200, marginRight: 8 }}
+                                    />
+                                    <Button type="primary" onClick={handleSearchByGenre}><SearchOutlined /> Buscar</Button>
+                                </>
+                            )}
+                            <Table
+                                rowSelection={{
+                                    type: selectionType,
+                                    ...rowSelection,
+                                }}
+                                columns={columns}
+                                dataSource={products}
+                                scroll={{ y: 400 }}
+                            />
+                        </div>
+                        <Modal
+                            title={isAdding ? "Agregar libro" : "Editar libro"}
+                            visible={isModalVisible}
+                            onOk={handleOk}
+                            onCancel={handleCancel}
+                        >
+                            <Form
+                                form={form}
+                                layout="vertical"
+                                initialValues={editingProduct}
+                                onValuesChange={() => setIsFormEdited(true)}
+                            >
+                                <Form.Item
+                                    name="name"
+                                    label="Nombre"
+                                    rules={[{ required: true, message: 'Por favor ingrese el nombre del libro' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                                <Form.Item
+                                    name="price"
+                                    label="Precio"
+                                    rules={[{ required: true, message: 'Por favor ingrese el precio del libro' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                                <Form.Item
+                                    name="author"
+                                    label="Autor"
+                                    rules={[{ required: true, message: 'Por favor ingrese el autor del libro' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                                <Form.Item
+                                    name="genre"
+                                    label="Género"
+                                    rules={[{ required: true, message: 'Por favor ingrese el género del libro' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Form>
+                        </Modal>
+                    </div>
+                </Content>
+            </Layout>
+        </Layout>
     );
 };
 
