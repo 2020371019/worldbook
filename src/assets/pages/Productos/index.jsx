@@ -142,7 +142,6 @@ const Productos = () => {
     const handleGenreChange = async (value) => {
         setGenre(value);
         if (value) {
-
             try {
                 const data = await getProductsByGenre(value);
                 const productsWithKey = data.map(product => ({
@@ -150,8 +149,6 @@ const Productos = () => {
                     key: product._id,
                 }));
                 setProducts(productsWithKey);
-
-                
             } catch (error) {
                 console.error('Error al obtener los libros por género', error);
                 openNotification('error', 'Error', 'Hubo un problema al obtener los libros por género.');
@@ -271,10 +268,12 @@ const Productos = () => {
                                     <Button type="primary" onClick={handleEdit}><EditFilled /></Button>
                                     <Button type="primary" onClick={handleDelete}><DeleteFilled /></Button>
                                     <AutoComplete
+
                                         style={{ width: 200, marginRight: 8 }}
                                         value={genre}
                                         onChange={handleGenreChange}
                                         placeholder="Género"
+
                                     />
                                 </>
                             )}
