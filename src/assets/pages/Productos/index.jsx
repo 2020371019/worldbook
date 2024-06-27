@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Nav from '../../components/Nav';
-import { Divider, Table, Button, Modal, Form, Input, notification, AutoComplete } from 'antd';
+import { Divider, Table, Button, Modal, Form, Input, notification } from 'antd';
 import { getProducts, UpdateProducts, deleteProducts, addProduct, getProductsByGenre } from '../../../services/products';
 import { useAuth } from '../../../hooks/useAuth';
 import { EditFilled, DeleteFilled, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
@@ -11,7 +11,9 @@ import {
   MenuUnfoldOutlined, 
   BookOutlined, 
   UserOutlined, 
-  HomeOutlined
+  HomeOutlined,
+  KeyOutlined
+
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 
@@ -140,34 +142,17 @@ const Productos = () => {
         setIsFormEdited(false);
     };
 
-    const handleGenreChange = async (value) => {
-        setGenre(value);
-        if (value) {
-
-            try {
-                const data = await getProductsByGenre(value);
-                const productsWithKey = data.map(product => ({
-                    ...product,
-                    key: product._id,
-                }));
-                setProducts(productsWithKey);
-
-                
-            } catch (error) {
-                console.error('Error al obtener los libros por género', error);
-                openNotification('error', 'Error', 'Hubo un problema al obtener los libros por género.');
-            }
-        } else {
-            try {
-                const data = await getProducts();
-                const productsWithKey = data.map(product => ({
-                    ...product,
-                    key: product._id,
-                }));
-                setProducts(productsWithKey);
-            } catch (error) {
-                console.error('Error al obtener los libros', error);
-            }
+    const handleSearchByGenre = async () => {
+        try {
+            const data = await getProductsByGenre(genre);
+            const productsWithKey = data.map(product => ({
+                ...product,
+                key: product._id,
+            }));
+            setProducts(productsWithKey);
+        } catch (error) {
+            console.error('Error al obtener los libros por género', error);
+            openNotification('error', 'Error', 'Hubo un problema al obtener los libros por género.');
         }
     };
 
@@ -207,17 +192,20 @@ const Productos = () => {
     const handleMenuClick = (key) => {
         switch (key) {
             case '1':
-                navigate('/');
-                break;
+              navigate('/');
+              break;
             case '2':
-                navigate('/perfil');
-                break;
+              navigate('/perfil');
+              break;
             case '3':
-                navigate('/productos');
-                break;
+                navigate('/editprofile');
+              break;
+            case '4':
+              navigate('/productos');
+              break;
             default:
-                break;
-        }
+              break;
+          }
     };
 
     return (
@@ -229,12 +217,13 @@ const Productos = () => {
                         <Menu
                             theme="dark"
                             mode="inline"
-                            defaultSelectedKeys={['3']}
+                            defaultSelectedKeys={['4']}
                             onClick={({ key }) => handleMenuClick(key)}
                             items={[
-                                { key: '1', icon: <HomeOutlined />, label: 'Home' },
-                                { key: '2', icon: <UserOutlined />, label: 'Perfil' },
-                                { key: '3', icon: <BookOutlined />, label: 'Libros' },
+                                { key: '1', icon: <HomeOutlined />, label: 'Home'},
+                                { key: '2', icon: <KeyOutlined />, label: 'Editar contraseña'},
+                                { key: '3', icon: <UserOutlined/>, label: 'Editar perfil'},
+                                { key: '4', icon: <BookOutlined />, label: 'Libros'},
                             ]}
                         />
                     </Sider>
@@ -271,12 +260,13 @@ const Productos = () => {
                                     <Button type="primary" onClick={handleAdd}><PlusCircleOutlined /> Agregar libro</Button>
                                     <Button type="primary" onClick={handleEdit}><EditFilled /></Button>
                                     <Button type="primary" onClick={handleDelete}><DeleteFilled /></Button>
-                                    <AutoComplete
-                                        style={{ width: 200, marginRight: 8 }}
-                                        value={genre}
-                                        onChange={handleGenreChange}
+                                    <Input
                                         placeholder="Género"
+                                        value={genre}
+                                        onChange={e => setGenre(e.target.value)}
+                                        style={{ width: 200, marginRight: 8 }}
                                     />
+                                    <Button type="primary" onClick={handleSearchByGenre}><SearchOutlined /> Buscar</Button>
                                 </>
                             )}
                             <Table
@@ -290,7 +280,7 @@ const Productos = () => {
                             />
                         </div>
                         <Modal
-                            title={isAdding ? "Agregar libro" : "Editar libro"}
+                            title={isAdding ? "Agregar libro " : "Editar libro "}
                             visible={isModalVisible}
                             onOk={handleOk}
                             onCancel={handleCancel}
