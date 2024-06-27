@@ -142,17 +142,31 @@ const Productos = () => {
         setIsFormEdited(false);
     };
 
-    const handleSearchByGenre = async () => {
-        try {
-            const data = await getProductsByGenre(genre);
-            const productsWithKey = data.map(product => ({
-                ...product,
-                key: product._id,
-            }));
-            setProducts(productsWithKey);
-        } catch (error) {
-            console.error('Error al obtener los libros por género', error);
-            openNotification('error', 'Error', 'Hubo un problema al obtener los libros por género.');
+    const handleGenreChange = async (value) => {
+        setGenre(value);
+        if (value) {
+            try {
+                const data = await getProductsByGenre(value);
+                const productsWithKey = data.map(product => ({
+                    ...product,
+                    key: product._id,
+                }));
+                setProducts(productsWithKey);
+            } catch (error) {
+                console.error('Error al obtener los libros por género', error);
+                openNotification('error', 'Error', 'Hubo un problema al obtener los libros por género.');
+            }
+        } else {
+            try {
+                const data = await getProducts();
+                const productsWithKey = data.map(product => ({
+                    ...product,
+                    key: product._id,
+                }));
+                setProducts(productsWithKey);
+            } catch (error) {
+                console.error('Error al obtener los libros', error);
+            }
         }
     };
 
@@ -260,11 +274,11 @@ const Productos = () => {
                                     <Button type="primary" onClick={handleAdd}><PlusCircleOutlined /> Agregar libro</Button>
                                     <Button type="primary" onClick={handleEdit}><EditFilled /></Button>
                                     <Button type="primary" onClick={handleDelete}><DeleteFilled /></Button>
-                                    <Input
-                                        placeholder="Género"
-                                        value={genre}
-                                        onChange={e => setGenre(e.target.value)}
+                                    <AutoComplete
                                         style={{ width: 200, marginRight: 8 }}
+                                        value={genre}
+                                        onChange={handleGenreChange}
+                                        placeholder="Género"
                                     />
                                     <Button type="primary" onClick={handleSearchByGenre}><SearchOutlined /> Buscar</Button>
                                 </>
