@@ -114,26 +114,7 @@ const Profile = () => {
             </Form>
           </Card>
     
-    <div style={{ padding: "20px" }}>
-      <h1>Perfil</h1>
-      <h1>{user.readerFound.email}</h1>
-      <Form layout="vertical">
-        <Form.Item label="Correo">
-          <Input value={user.readerFound.email} disabled />
-        </Form.Item>
-        <Form.Item label="Nueva Contraseña">
-          <Input.Password
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" onClick={handleSave}> 
-            Guardar
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+   
     </Content>
     </Layout>
     </Layout>
