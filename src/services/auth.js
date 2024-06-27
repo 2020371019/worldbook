@@ -32,9 +32,28 @@ export const updateUser = async (userId, newPassword) => {
 };
 
 
+
+export const upUser = async (userId, name, correo) => {
+  try {
+    const response = await axios.put(
+      `${ENV.API_URL}/${ENV.ENDPOINTS.CHANGE_DATA_USER}/${userId}`,
+      { 
+        readername: name,
+        email: correo,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar los datos ', error);
+    throw error;
+  }
+};
+
+
 export default {
   register,
   loginF,
   updateUser,
+  upUser
 
 };

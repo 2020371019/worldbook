@@ -5,7 +5,9 @@ import {
   MenuUnfoldOutlined, 
   BookOutlined, 
   UserOutlined, 
-  HomeOutlined
+  HomeOutlined,
+  KeyOutlined
+
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { useNavigate } from "react-router-dom";
@@ -27,6 +29,9 @@ const Home = () => {
         navigate('/perfil');
         break;
       case '3':
+          navigate('/editprofile');
+        break;
+      case '4':
         navigate('/productos');
         break;
       default:
@@ -45,8 +50,9 @@ const Home = () => {
           onClick={({ key }) => handleMenuClick(key)}
           items={[
             { key: '1', icon: <HomeOutlined />, label: 'Home' },
-            { key: '2', icon: <UserOutlined />, label: 'Perfil' },
-            { key: '3', icon: <BookOutlined />, label: 'Libros' },
+            { key: '2', icon: <KeyOutlined />, label: 'Editar contraseña' },
+            { key: '3', icon: <UserOutlined/>, label: 'Editar perfil' },
+            { key: '4', icon: <BookOutlined />, label: 'Libros' },
           ]}
         />
       </Sider>

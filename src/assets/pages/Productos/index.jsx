@@ -10,7 +10,9 @@ import {
   MenuUnfoldOutlined, 
   BookOutlined, 
   UserOutlined, 
-  HomeOutlined
+  HomeOutlined,
+  KeyOutlined
+
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 
@@ -189,17 +191,20 @@ const Productos = () => {
     const handleMenuClick = (key) => {
         switch (key) {
             case '1':
-                navigate('/');
-                break;
+              navigate('/');
+              break;
             case '2':
-                navigate('/perfil');
-                break;
+              navigate('/perfil');
+              break;
             case '3':
-                navigate('/productos');
-                break;
+                navigate('/editprofile');
+              break;
+            case '4':
+              navigate('/productos');
+              break;
             default:
-                break;
-        }
+              break;
+          }
     };
 
     return (
@@ -211,12 +216,13 @@ const Productos = () => {
                         <Menu
                             theme="dark"
                             mode="inline"
-                            defaultSelectedKeys={['3']}
+                            defaultSelectedKeys={['4']}
                             onClick={({ key }) => handleMenuClick(key)}
                             items={[
-                                { key: '1', icon: <HomeOutlined />, label: 'Home' },
-                                { key: '2', icon: <UserOutlined />, label: 'Perfil' },
-                                { key: '3', icon: <BookOutlined />, label: 'Libros' },
+                                { key: '1', icon: <HomeOutlined />, label: 'Home'},
+                                { key: '2', icon: <KeyOutlined />, label: 'Editar contraseña'},
+                                { key: '3', icon: <UserOutlined/>, label: 'Editar perfil'},
+                                { key: '4', icon: <BookOutlined />, label: 'Libros'},
                             ]}
                         />
                     </Sider>
