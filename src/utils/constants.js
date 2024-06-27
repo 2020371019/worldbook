@@ -10,6 +10,9 @@ export const ENV = {
         DELETEBOOKS:'books/',
         GETBYGENRE:'books/getbygenre',
         CHANGE_DATA_USER: "getin/updateUserById",
+        NEWBOOK: 'books/create',
+        UPDATEPRODUCTS:'books/mod',
+        DELETEBOOKS:'books/del'
     },
     STORAGE: {
             TOKEN: "token",

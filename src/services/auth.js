@@ -6,7 +6,7 @@ const register = async (readername, email, password) => {
     readername,
     email,
     password,
-    roles: ['user'],
+    roles: ["CommonReader"],
   });
 };
 
