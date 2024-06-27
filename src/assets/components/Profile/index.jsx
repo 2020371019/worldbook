@@ -1,7 +1,5 @@
 import React, { useState} from "react";
-
-import { Form, Input, Button, message, Layout, Menu, theme, Card } from "antd";
-
+import { Form, Input, Button, message, Layout, Menu, theme, Card, notification } from "antd";
 import { updateUser } from "../../../services/auth";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -29,11 +27,11 @@ const Profile = () => {
   const handleSave = async () => {
     try {
       await updateUser(user.readerFound._id, newPassword);
-      message.success("Contraseña cambiada correctamente");
+      openNotification('success', 'Exito', 'Tu contraseña se ha cambiado correctamente');
+
       setNewPassword(""); // Limpiar el campo de contraseña después de guardar
     } catch (error) {
       console.error("Error al cambiar la contraseña:", error);
-      message.error("Hubo un error al cambiar la contraseña");
     }
   };
 
@@ -57,6 +55,13 @@ const Profile = () => {
     }
   };
 
+
+  const openNotification = (type, message, description) => {
+    notification[type]({
+        message,
+        description,
+    });
+};
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
