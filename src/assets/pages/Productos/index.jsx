@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Nav from '../../components/Nav';
-import { Divider, Table, Button, Modal, Form, Input, notification } from 'antd';
+import { Divider, Table, Button, Modal, Form, Input, notification, AutoComplete } from 'antd';
 import { getProducts, UpdateProducts, deleteProducts, addProduct, getProductsByGenre } from '../../../services/products';
 import { useAuth } from '../../../hooks/useAuth';
 import { EditFilled, DeleteFilled, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
@@ -280,7 +280,7 @@ const Productos = () => {
                                         onChange={handleGenreChange}
                                         placeholder="Género"
                                     />
-                                    <Button type="primary" onClick={handleSearchByGenre}><SearchOutlined /> Buscar</Button>
+                                    
                                 </>
                             )}
                             <Table
