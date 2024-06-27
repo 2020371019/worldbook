@@ -8,7 +8,8 @@ export const ENV = {
         PRODUCTS:'books',
         UPDATEPRODUCTS:'books/',
         DELETEBOOKS:'books/',
-        GETBYGENRE:'books/getbygenre'
+        GETBYGENRE:'books/getbygenre',
+        CHANGE_DATA_USER: "getin/updateUserById",
     },
     STORAGE: {
             TOKEN: "token",
